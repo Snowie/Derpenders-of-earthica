@@ -44,7 +44,7 @@ void Asteroid::update(sf::Time time)
     //Loop around, asteroids style.
     if(allAbove)
     {
-        y = 1030+circle.getRadius();
+        y = 1030+circle.getRadius()*2;
         circle.setPosition(circle.getPosition().x, y);
     }
     if(allBelow)
@@ -54,7 +54,7 @@ void Asteroid::update(sf::Time time)
     }
     if(allLeft)
     {
-        x = 1920 + circle.getRadius();
+        x = 1920 + circle.getRadius()*2;
         circle.setPosition(x, circle.getPosition().y);
     }
     if(allRight)

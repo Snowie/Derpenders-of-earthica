@@ -14,13 +14,12 @@ class Game
         Game();
         virtual ~Game();
         void init();
-        void initAsteroids();
-        void loop();
-        bool checkColl(sf::RectangleShape, sf::RectangleShape) const;
-        bool checkColl(sf::FloatRect, sf::FloatRect) const;
-        bool restartGame();
     protected:
     private:
+        void initAsteroids();
+        void loop();
+        bool checkColl(sf::FloatRect, sf::FloatRect) const;
+        bool restartGame();
         bool restart;
         bool gameOver;
         sf::Clock clock;

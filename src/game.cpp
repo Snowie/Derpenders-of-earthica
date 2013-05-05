@@ -3,6 +3,7 @@
 #include <time.h>
 #include <cstdlib>
 #include <sstream>
+
 Game::Game()
 {
     //ctor
@@ -18,9 +19,9 @@ void Game::initAsteroids()
 {
     //Clear the vector of asteroids and generate random ones!
     asteroids.clear();
-    for(unsigned int i = 0; i < (unsigned int) rand() % 30 + 1; ++i)
+    for(unsigned int i = 0; i < (unsigned int) rand() % 30 + 7; ++i)
     {
-        asteroids.push_back(new Asteroid(Vector(rand() % 50 + 1,rand()%360+1), rand()%100+1, rand()%App.getSize().x+1, rand()%App.getSize().y+1));
+        asteroids.push_back(new Asteroid(Vector(rand() % 80 + 41,rand()%360+1), rand()%100+1, rand()%App.getSize().x+1, rand()%App.getSize().y+1));
     }
 }
 
@@ -84,18 +85,30 @@ bool Game::restartGame()
     sf::Font font;
     font.loadFromFile("arial.ttf");
 
-    //to prompt the user on restarting
+    //To prompt the user on restarting
     sf::Text text("Press Y to restart or N to quit.", font);
     text.setCharacterSize(30);
     text.setPosition(App.getSize().x/2.0, App.getSize().y/2.0);
     text.setStyle(sf::Text::Bold);
     text.setColor(sf::Color::Green);
-    // Draw it
+
+    //Draw it
     App.draw(text);
     App.display();
 
+    //Infinite loop until the user decides what to do..
     while(true)
     {
+        //Still, we should check if the user has pressed escape or tried to close the application.
+        runEvents();
+
+        //If the user has chosen to kill the app, exit gracefully.
+        if(!restart)
+        {
+            return false;
+            break;
+        }
+
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
         {
             return true;
@@ -117,6 +130,8 @@ void Game::loop()
 
         //Generic application stuff
         runEvents();
+
+        //To check if the user has force closed the app
         if(gameOver)
         {
             break;
@@ -130,6 +145,12 @@ void Game::loop()
 
         for(Asteroid *ast: asteroids)
         {
+            ast->update(timeFrame);
+        }
+
+        //check if the player has been struck
+        for(Asteroid *ast: asteroids)
+        {
             if(checkColl(player.getShape().getGlobalBounds(),ast->getCircle().getGlobalBounds()))
             {
                 gameOver = true;
@@ -137,9 +158,25 @@ void Game::loop()
             }
         }
 
-        for(Asteroid *ast: asteroids)
+        //If our bullet is in the air, check for collisions
+
+        unsigned int i = 0;
+
+        if(player.getBullet()->getState())
         {
-            ast->update(timeFrame);
+            for(Asteroid * ast: asteroids)
+            {
+                if(checkColl(player.getBullet()->getRect().getGlobalBounds(), ast->getCircle().getGlobalBounds()))
+                {
+                    asteroids.erase(asteroids.begin()+i);
+                    player.getBullet()->resetBull(player.getShape().getPosition());
+                    break;
+                }
+                else
+                {
+                    ++i;
+                }
+            }
         }
 
         App.clear();
@@ -160,9 +197,10 @@ void Game::loop()
         App.display();
     }
 
+    //Only check if we should restart if the player has not force closed the game.
     if(App.isOpen())
     {
-        restart=restartGame();
+        restart = restartGame();
     }
 }
 

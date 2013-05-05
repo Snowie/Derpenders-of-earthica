@@ -43,7 +43,7 @@ void Bullet::resetBull(sf::Vector2f position)
 void Bullet::bulletLogic(sf::Time time)
 {
     //If we are in bounds...
-    if(y > 0 && y < 1030)
+    if(y > 0 && y < 1030 && bulletState)
     {
         //Update our position
         x += bulletVelocity.getXComponent()*time.asSeconds();

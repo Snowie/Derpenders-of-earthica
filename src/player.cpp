@@ -49,7 +49,7 @@ void Player::control(sf::Time time)
     //Eliminate the mineral scum!
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
     {
-        //bullet.resetBull(shape.getPosition());
+        bullet.resetBull(shape.getPosition());
         bullet.activate();
 
         //We are in space, our bullets move with us!
@@ -109,22 +109,22 @@ void Player::update(sf::Time time)
     if(allAbove)
     {
         y = 1050;
-        shape.setPosition(shape.getPosition().x,1050);
+        shape.setPosition(shape.getPosition().x, y);
     }
     if(allBelow)
     {
         y = -20;
-        shape.setPosition(shape.getPosition().x,-20);
+        shape.setPosition(shape.getPosition().x, y);
     }
     if(allLeft)
     {
         x = 1940;
-        shape.setPosition(1100,shape.getPosition().y);
+        shape.setPosition(x, shape.getPosition().y);
     }
     if(allRight)
     {
         x = -20;
-        shape.setPosition(-20,shape.getPosition().y);
+        shape.setPosition(x, shape.getPosition().y);
     }
 
     if(!bullet.getState())

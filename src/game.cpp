@@ -21,7 +21,7 @@ void Game::initAsteroids()
     asteroids.clear();
     for(unsigned int i = 0; i < (unsigned int) rand() % 30 + 7; ++i)
     {
-        asteroids.push_back(new Asteroid(Vector(rand() % 80 + 41,rand()%360+1), rand()%100+1, rand()%App.getSize().x+1, rand()%App.getSize().y+1));
+        asteroids.push_back(Asteroid(Vector(rand() % 80 + 41,rand()%360+1), rand()%100+1, rand()%App.getSize().x+1, rand()%App.getSize().y+1));
     }
 }
 
@@ -143,15 +143,15 @@ void Game::loop()
         //Update the player based on its current state
         player.update(timeFrame);
 
-        for(Asteroid *ast: asteroids)
+        for(Asteroid &ast: asteroids)
         {
-            ast->update(timeFrame);
+            ast.update(timeFrame);
         }
 
-        //check if the player has been struck
-        for(Asteroid *ast: asteroids)
+        //Check if the player has been struck
+        for(Asteroid &ast: asteroids)
         {
-            if(checkColl(player.getShape().getGlobalBounds(),ast->getCircle().getGlobalBounds()))
+            if(checkColl(player.getShape().getGlobalBounds(),ast.getCircle().getGlobalBounds()))
             {
                 gameOver = true;
                 break;
@@ -164,10 +164,15 @@ void Game::loop()
 
         if(player.getBullet()->getState())
         {
-            for(Asteroid * ast: asteroids)
+            for(Asteroid & ast: asteroids)
             {
-                if(checkColl(player.getBullet()->getRect().getGlobalBounds(), ast->getCircle().getGlobalBounds()))
+                if(checkColl(player.getBullet()->getRect().getGlobalBounds(), ast.getCircle().getGlobalBounds()))
                 {
+                    std::vector <Asteroid> toAdd = ast.destroy();
+                    for(Asteroid ast: toAdd)
+                    {
+                        asteroids.push_back(ast);
+                    }
                     asteroids.erase(asteroids.begin()+i);
                     player.getBullet()->resetBull(player.getShape().getPosition());
                     break;
@@ -189,9 +194,9 @@ void Game::loop()
             App.draw(player.getBullet()->getRect());
         }
 
-        for(Asteroid *ast: asteroids)
+        for(Asteroid ast: asteroids)
         {
-            App.draw(ast->getCircle());
+            App.draw(ast.getCircle());
         }
 
         App.display();

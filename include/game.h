@@ -16,18 +16,28 @@ class Game
         void init();
     protected:
     private:
+
+        //These set up the state of the game
+        bool restartGame();
         void initAsteroids();
+
+        //These are the functions that continually run...
         void loop();
         bool checkColl(sf::FloatRect, sf::FloatRect) const;
-        bool restartGame();
+        void runEvents();
+
+        //Miscellaneous state variables
         bool restart;
         bool gameOver;
+
+        //SFML stuffs
+        sf::RenderWindow App;
         sf::Clock clock;
         sf::Time timeFrame;
-        std::vector <Asteroid*> asteroids;
-        void runEvents();
+
+        //The only two special objects
+        std::vector <Asteroid> asteroids;
         Player player;
-        sf::RenderWindow App;
 };
 
 #endif // GAME_H

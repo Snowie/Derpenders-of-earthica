@@ -12,9 +12,6 @@ Player::Player()
     x = 960;
     y = 900;
     shape.setPosition(x,y);
-    //time = clock.restart();
-
-    //ctor
 }
 
 void Player::control(sf::Time time)
